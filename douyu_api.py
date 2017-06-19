@@ -2,7 +2,6 @@
 import time
 import hashlib
 import random
-import json
 import sys
 import re
 
@@ -15,20 +14,16 @@ VER = '2017061511'
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
 
-def douyu_api(rid, cdn='ws', rate='2', did=None, tt=None):
+def douyu_api(rid, cdn='ws', rate='2'):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
-    if tt is None:
-        tt = str(int(time.time() / 60))
-    if did is None:
-        rnd_md5 = hashlib.md5(str(random.random()).encode('utf8'))
-        did = rnd_md5.hexdigest().upper()
+    tt = str(int(time.time() / 60))
+    rnd_md5 = hashlib.md5(str(random.random()).encode('utf8'))
+    did = rnd_md5.hexdigest().upper()
     to_sign = ''.join([rid, did, API_KEY, tt])
     sign = dyprvt_hash(to_sign)
     payload = dict(ver=VER, sign=sign, did=did, rate=rate, tt=tt, cdn=cdn)
-    payload_str = 'ver={}&sign={}&did={}&rate={}&tt={}&cdn={}'.format(VER, sign, did, rate, tt, cdn)
 
-    json_str = requests.post(endpoint, data=payload).content.decode('utf8')
-    json_data = json.loads(json_str)
+    json_data = requests.post(endpoint, data=payload).json()
 
     if json_data['error'] == 0:
         data = json_data['data']
