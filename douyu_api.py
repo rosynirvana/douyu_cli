@@ -1,7 +1,10 @@
+#! /usr/bin/env python3
 import time
 import hashlib
 import random
 import json
+import sys
+import re
 
 import requests
 
@@ -12,7 +15,7 @@ VER = '2017061511'
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
 
-def douyu_api(rid, cdn, rate, did=None, tt=None):
+def douyu_api(rid, cdn='ws', rate='2', did=None, tt=None):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
     if tt is None:
         tt = str(int(time.time() / 60))
@@ -31,12 +34,14 @@ def douyu_api(rid, cdn, rate, did=None, tt=None):
         data = json_data['data']
         url = '/'.join([data['rtmp_url'], data['rtmp_live']])
         print(url)
+    elif json_data['error'] == -5:
+        raise Exception('Offline')
     else:
-        raise Exception('API returned with error')
+        raise Exception('API returned with error {}'.format(json_data['error']))
 
 
-#douyu_api('532152', '1', '', '72D26C8FF690BE48BCD16357AFB3758F', '24962932')
-douyu_api('242967', 'ws', '2')
-#douyu_api('2150067', 'ws', '2', '72D26C8FF690BE48BCD16357AFB3758F', '24964521')
-#douyu_api('2150067', 'ws', '2')
-
+if __name__ == '__main__':
+    rid = re.search(r'(\d+)', sys.argv[1])
+    if rid is not None:
+        rid = rid.group(1)
+        douyu_api(rid)
