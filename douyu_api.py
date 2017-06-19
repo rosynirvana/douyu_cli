@@ -39,4 +39,8 @@ if __name__ == '__main__':
     rid = re.search(r'(\d+)', sys.argv[1])
     if rid is not None:
         rid = rid.group(1)
-        douyu_api(rid)
+        try:
+            douyu_api(rid)
+        except Exception as e:
+            print(e)
+
