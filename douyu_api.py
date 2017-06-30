@@ -9,7 +9,8 @@ import requests
 
 import dyprvt
 API_KEY = 'a2053899224e8a92974c729dceed1cc99b3d8282'
-VER = '2017061511'
+VER = '2017063001'
+UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
@@ -22,8 +23,10 @@ def douyu_api(rid, cdn='ws', rate='2'):
     to_sign = ''.join([rid, did, API_KEY, tt])
     sign = dyprvt_hash(to_sign)
     payload = dict(ver=VER, sign=sign, did=did, rate=rate, tt=tt, cdn=cdn)
+    headers = {}
+    headers['User-Agent'] = UA
 
-    json_data = requests.post(endpoint, data=payload).json()
+    json_data = requests.post(endpoint, data=payload, headers=headers).json()
 
     if json_data['error'] == 0:
         data = json_data['data']
