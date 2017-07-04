@@ -15,7 +15,7 @@ UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML,
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
 
-def douyu_api(rid, cdn='ws', rate='2'):
+def douyu_api(rid, cdn='ws', rate='0'):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
     tt = str(int(time.time() / 60))
     rnd_md5 = hashlib.md5(str(random.random()).encode('utf8'))
@@ -39,7 +39,7 @@ def douyu_api(rid, cdn='ws', rate='2'):
 
 
 if __name__ == '__main__':
-    rid = re.search(r'(\d+)', sys.argv[1])
+    rid = re.search(r'/(\d+)', sys.argv[1])
     if rid is None:
         page_content = requests.get(sys.argv[1]).content.decode('utf8')
         rid = re.search(r'room_id=(\d+)', page_content)
