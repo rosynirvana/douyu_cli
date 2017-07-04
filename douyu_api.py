@@ -39,10 +39,10 @@ def douyu_api(rid, cdn='ws', rate='0'):
 
 
 if __name__ == '__main__':
-    rid = re.search(r'/(\d+)', sys.argv[1])
-    if rid is None:
-        page_content = requests.get(sys.argv[1]).content.decode('utf8')
-        rid = re.search(r'room_id=(\d+)', page_content)
+    #rid = re.search(r'/(\d+)', sys.argv[1])
+# what if room name is 123abc ?
+    page_content = requests.get(sys.argv[1]).content.decode('utf8')
+    rid = re.search(r'room_id=(\d+)', page_content)
     if rid is not None:
         rid = rid.group(1)
         try:
