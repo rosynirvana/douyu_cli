@@ -4,6 +4,7 @@ import hashlib
 import random
 import sys
 import re
+import argparse
 
 import requests
 
@@ -15,7 +16,14 @@ UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML,
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
 
-def douyu_api(rid, cdn='ws', rate='0'):
+def douyu_online(rid):
+    try:
+        douyu_api(rid)
+    except Exception:
+        return False
+    return True
+
+def douyu_api(rid, cdn='ws', rate='1'):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
     tt = str(int(time.time() / 60))
     rnd_md5 = hashlib.md5(str(random.random()).encode('utf8'))
@@ -27,7 +35,6 @@ def douyu_api(rid, cdn='ws', rate='0'):
     headers['User-Agent'] = UA
 
     json_data = requests.post(endpoint, data=payload, headers=headers).json()
-
     if json_data['error'] == 0:
         data = json_data['data']
         url = '/'.join([data['rtmp_url'], data['rtmp_live']])
@@ -37,16 +44,35 @@ def douyu_api(rid, cdn='ws', rate='0'):
     else:
         raise Exception('API returned with error {}'.format(json_data['error']))
 
+def page_parser(url):
+    page_content = requests.get(url).content.decode('utf8')
+    online_patt = r'"online_id":\[([0-9,"]+)\]'
+    hit = re.search(online_patt, page_content)
+    if hit is not None:
+        print('An event page with room ids:')
+        print(hit.group(1))
+        room_list = hit.group(1).split(',')
+        room = room_list[0] if len(room_list) > 1 else room_list
+        return room[1:-1]
+    else:
+        hit = re.search(r'roomid=(\d+)', page_content)
+        if hit is not None:
+            return hit.group(1)
+
+    return None
 
 if __name__ == '__main__':
-    #rid = re.search(r'/(\d+)', sys.argv[1])
-# what if room name is 123abc ?
-    page_content = requests.get(sys.argv[1]).content.decode('utf8')
-    rid = re.search(r'room_id=(\d+)', page_content)
-    if rid is not None:
-        rid = rid.group(1)
-        try:
-            douyu_api(rid)
-        except Exception as e:
-            print(e)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--room')
+    parser.add_argument('url', nargs='?')
+    args = parser.parse_args()
+
+    if args.room:
+        rid = args.room
+    elif args.url:
+        rid = page_parser(args.url)
+    try:
+        douyu_api(rid)
+    except Exception as e:
+        print(e)
 
