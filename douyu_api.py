@@ -55,7 +55,7 @@ def page_parser(url):
         room = room_list[0] if len(room_list) > 1 else room_list
         return room[1:-1]
     else:
-        hit = re.search(r'roomid=(\d+)', page_content)
+        hit = re.search(r'"room_id":(\d+)', page_content)
         if hit is not None:
             return hit.group(1)
 
