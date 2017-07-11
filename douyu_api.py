@@ -64,6 +64,7 @@ def page_parser(url):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
+    parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
     parser.add_argument('url', nargs='?')
     args = parser.parse_args()
 
@@ -71,8 +72,10 @@ if __name__ == '__main__':
         rid = args.room
     elif args.url:
         rid = page_parser(args.url)
+
+    quality = args.quality if args.quality else '0'
     try:
-        douyu_api(rid)
+        douyu_api(rid, rate=quality)
     except Exception as e:
         print(e)
 
