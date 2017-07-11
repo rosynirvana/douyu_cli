@@ -38,7 +38,7 @@ def douyu_api(rid, cdn='ws', rate='1'):
     if json_data['error'] == 0:
         data = json_data['data']
         url = '/'.join([data['rtmp_url'], data['rtmp_live']])
-        print(url)
+        return url
     elif json_data['error'] == -5:
         raise Exception('Offline')
     else:
@@ -65,6 +65,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
     parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
+    parser.add_argument('-p', '--mpv', action='store_true')
     parser.add_argument('url', nargs='?')
     args = parser.parse_args()
 
@@ -75,7 +76,13 @@ if __name__ == '__main__':
 
     quality = args.quality if args.quality else '0'
     try:
-        douyu_api(rid, rate=quality)
+        video_url = douyu_api(rid, rate=quality)
     except Exception as e:
         print(e)
+
+    if args.mpv:
+        import subprocess
+        subprocess.call(['mpv', '--no-ytdl', video_url])
+    else:
+        print(video_url)
 
