@@ -5,6 +5,7 @@ import random
 import sys
 import re
 import argparse
+import subprocess
 
 import requests
 
@@ -65,7 +66,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
     parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
-    parser.add_argument('-p', '--mpv', action='store_true')
+
+    grp = parser.add_mutually_exclusive_group()
+    grp.add_argument('-p', '--mpv', action='store_true')
+    grp.add_argument('-s', '--record')
+
     parser.add_argument('url', nargs='?')
     args = parser.parse_args()
 
@@ -81,8 +86,10 @@ if __name__ == '__main__':
         print(e)
 
     if args.mpv:
-        import subprocess
         subprocess.call(['mpv', '--no-ytdl', video_url])
+    elif args.record:
+        out_fn = args.record + '.mp4'
+        subprocess.call(['ffmpeg', '-i', video_url, '-c', 'copy', out_fn])
     else:
         print(video_url)
 
