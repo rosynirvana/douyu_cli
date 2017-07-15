@@ -84,6 +84,7 @@ if __name__ == '__main__':
         video_url = douyu_api(rid, rate=quality)
     except Exception as e:
         print(e)
+        sys.exit(0)
 
     if args.mpv:
         subprocess.call(['mpv', '--no-ytdl', video_url])
