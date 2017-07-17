@@ -63,6 +63,7 @@ def page_parser(url):
     return None
 
 if __name__ == '__main__':
+    print('status: seems broken')
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
     parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
