@@ -1,5 +1,7 @@
 # douyu_cli
 
+### Broken At this Moment ###
+
 ## USAGE
 ```
 ./douyu_api.py [-q quality] [-r room_id] [-p | -s output_filename] DOUYU_URL

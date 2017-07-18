@@ -64,6 +64,8 @@ def page_parser(url):
 
 if __name__ == '__main__':
     print('status: seems broken')
+    print('You can check {} for info of progress'.format('https://github.com/spacemeowx2/DouyuHTML5Player/issues/28'))
+    sys.exit(0)
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
     parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
