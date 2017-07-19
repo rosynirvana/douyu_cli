@@ -24,6 +24,16 @@ def douyu_online(rid):
         return False
     return True
 
+def douyu_api_html5(rid):
+    endpoint = 'http://m.douyu.com/html5/live?roomId=' + rid
+    headers = {}
+    headers['User-Agent'] = UA
+    req = requests.get(endpoint, headers=headers)
+    json_data = req.json()
+    if json_data['error'] != 0:
+        raise Exception(json_data['data'])
+    return json_data['data']['hls_url']
+
 def douyu_api(rid, cdn='ws', rate='1'):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
     tt = str(int(time.time() / 60))
@@ -65,7 +75,7 @@ def page_parser(url):
 if __name__ == '__main__':
     print('status: seems broken')
     print('You can check {} for info of progress'.format('https://github.com/spacemeowx2/DouyuHTML5Player/issues/28'))
-    sys.exit(0)
+    #sys.exit(0)
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--room')
     parser.add_argument('-q', '--quality', choices=['0', '1', '2'])
@@ -84,7 +94,8 @@ if __name__ == '__main__':
 
     quality = args.quality if args.quality else '0'
     try:
-        video_url = douyu_api(rid, rate=quality)
+        #video_url = douyu_api(rid, rate=quality)
+        video_url = douyu_api_html5(rid)
     except Exception as e:
         print(e)
         sys.exit(0)
