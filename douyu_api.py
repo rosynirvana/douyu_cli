@@ -31,8 +31,18 @@ def douyu_api_html5(rid):
     req = requests.get(endpoint, headers=headers)
     json_data = req.json()
     if json_data['error'] != 0:
-        raise Exception(json_data['data'])
+        raise Exception(json_data['msg'])
     return json_data['data']['hls_url']
+
+def douyu_api_android_hd(rid):
+    APPKEY = 'Y237pxTx2In5ayGz'
+    to_sign = 'room/{0}?aid=androidhd1&cdn={1}&client_sys=android&time={2}'.format(rid, 'ws', int(time.time()))
+    sign = hashlib.md5(bytes(to_sign+APPKEY, 'utf8')).hexdigest()
+    endpoint = 'https://capi.douyucdn.cn/api/v1/{0}&auth={1}'.format(to_sign, sign)
+    json_data = requests.get(endpoint).json()
+    if json_data['error'] != 0:
+        raise Exception(json_data['data'])
+    return json_data['data']['rtmp_url'] + '/' + json_data['data']['rtmp_live']
 
 def douyu_api(rid, cdn='ws', rate='1'):
     endpoint = 'https://www.douyu.com/lapi/live/getPlay/' + rid
@@ -95,7 +105,8 @@ if __name__ == '__main__':
     quality = args.quality if args.quality else '0'
     try:
         #video_url = douyu_api(rid, rate=quality)
-        video_url = douyu_api_html5(rid)
+        #video_url = douyu_api_html5(rid)
+        video_url = douyu_api_android_hd(rid)
     except Exception as e:
         print(e)
         sys.exit(0)
