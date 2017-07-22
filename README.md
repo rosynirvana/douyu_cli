@@ -16,3 +16,14 @@
 example:
 ./douyu_api.py -q 1 -r 3484 -s out
 ```
+
+```
+./douyu_notify.py [-t time_interval] [-i input_file] DOUYU_URL
+
+-t, --interval   After checking all rooms the process will sleep for t secs
+-i, --input      input file containing room IDs or URLs, seperated by new lines
+
+example:
+./douyu_api.py -t 60 -i watch_list.txt
+./douyu_api.py -t 120 -i watch_list_2.txt http://douyu.com/3484
+```

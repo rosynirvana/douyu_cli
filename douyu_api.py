@@ -23,7 +23,7 @@ def dyprvt_hash(input_data):
 
 def douyu_online(rid):
     try:
-        douyu_api(rid)
+        douyu_api_html5(rid)
     except Exception:
         return False
     return True
