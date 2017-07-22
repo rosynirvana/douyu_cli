@@ -14,6 +14,10 @@ API_KEY = 'a2053899224e8a92974c729dceed1cc99b3d8282'
 VER = '2017063001'
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 
+def make_fn(rid, specified):
+    tfmt = '%m%d_%I:%M:%S'
+    return '_'.join([rid, time.strftime(tfmt, time.localtime()), specified])
+
 def dyprvt_hash(input_data):
     return dyprvt.stupidMD5(input_data)
 
@@ -114,7 +118,7 @@ if __name__ == '__main__':
     if args.mpv:
         subprocess.call(['mpv', '--no-ytdl', video_url])
     elif args.record:
-        out_fn = args.record + '.mp4'
+        out_fn = make_fn(rid, args.record) + '.mp4'
         subprocess.call(['ffmpeg', '-i', video_url, '-c', 'copy', out_fn])
     else:
         print(video_url)
