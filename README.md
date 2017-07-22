@@ -24,6 +24,6 @@ example:
 -i, --input      input file containing room IDs or URLs, seperated by new lines
 
 example:
-./douyu_api.py -t 60 -i watch_list.txt
-./douyu_api.py -t 120 -i watch_list_2.txt http://douyu.com/3484
+./douyu_notify.py -t 60 -i watch_list.txt
+./douyu_notify.py -t 120 -i watch_list_2.txt http://douyu.com/3484
 ```
