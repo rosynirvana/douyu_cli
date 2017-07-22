@@ -15,7 +15,7 @@ VER = '2017063001'
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 
 def make_fn(rid, specified):
-    tfmt = '%m%d_%I:%M:%S'
+    tfmt = '%m%d_%I_%M_%S'
     return '_'.join([rid, time.strftime(tfmt, time.localtime()), specified])
 
 def dyprvt_hash(input_data):
