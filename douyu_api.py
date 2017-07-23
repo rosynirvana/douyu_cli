@@ -83,6 +83,11 @@ def page_parser(url):
         hit = re.search(r'"room_id":(\d+)', page_content)
         if hit is not None:
             return hit.group(1)
+        else:
+            # http://www.douyu.com/t/lck
+            hit = re.search(r'onlineid=(\d+)', page_content)
+            if hit is not None:
+                return hit.group(1)
 
     return None
 
